@@ -13,13 +13,14 @@
     "@supabase/ssr": "^0.5.2",
     "@supabase/supabase-js": "^2.46.2",
     "date-fns": "^4.1.0",
+    "jose": "^5.9.6",
     "next": "^15.0.3",
     "react": "19.0.0-rc-7670501b-20241124",
     "react-dom": "19.0.0-rc-7670501b-20241124"
   },
   "devDependencies": {
     "@repo/typescript-config": "workspace:*",
-    "@types/node": "^20",
+    "@types/node": "^22",
     "@types/react": "npm:types-react@rc",
     "@types/react-dom": "npm:types-react-dom@rc",
     "eslint": "^8",

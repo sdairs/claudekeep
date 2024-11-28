@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import SupabaseProvider from "@/lib/supabase-provider";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -27,9 +26,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
       <body>
-        <SupabaseProvider>
-          {children}
-        </SupabaseProvider>
+        {children}
       </body>
     </html>
   );

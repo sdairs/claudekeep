@@ -2,28 +2,30 @@
 
 import { useEffect, useState } from 'react';
 import { Header } from '@/components/Header';
-import { Chat, getChats } from '@/lib/db';
+import { Chat, getChats } from '@/lib/supabase/queries';
 import Link from 'next/link';
 import { format } from 'date-fns';
+import { createClient } from '@/lib/supabase/client';
 
 export default function Home() {
   const [publicChats, setPublicChats] = useState<Chat[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const supabase = createClient();
+
   useEffect(() => {
     async function loadPublicChats() {
-      const fetchedChats = await getChats();
-      console.log(fetchedChats);
+      const fetchedChats = await getChats(supabase);
       setPublicChats(fetchedChats.slice(0, 6)); // Show only first 6 chats
       setLoading(false);
     }
     loadPublicChats();
-  }, []);
+  });
 
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
-      
+
       <main className="pt-16">
         {/* Hero Section */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -41,7 +43,7 @@ export default function Home() {
         {/* Featured Chats Grid */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <h2 className="text-3xl font-bold text-gray-900 mb-8">Featured Conversations</h2>
-          
+
           {loading ? (
             <div className="text-center py-12">
               <div className="text-xl text-gray-500">Loading conversations...</div>

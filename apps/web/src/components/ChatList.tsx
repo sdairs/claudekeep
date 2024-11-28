@@ -1,4 +1,4 @@
-import { Chat } from '@/lib/db';
+import { Chat } from '@/lib/supabase/queries';
 import { format } from 'date-fns';
 
 interface ChatListProps {
@@ -17,11 +17,10 @@ export function ChatList({ chats, selectedChatId, onSelectChat }: ChatListProps)
             <button
               key={chat.id}
               onClick={() => onSelectChat(chat)}
-              className={`w-full text-left p-3 rounded-lg transition-colors ${
-                selectedChatId === chat.id
+              className={`w-full text-left p-3 rounded-lg transition-colors ${selectedChatId === chat.id
                   ? 'bg-blue-100 hover:bg-blue-200'
                   : 'hover:bg-gray-100'
-              }`}
+                }`}
             >
               <div className="text-sm font-medium truncate">
                 {chat.chat[0]?.text.substring(0, 30)}...

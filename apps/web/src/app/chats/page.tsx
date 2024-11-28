@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { ChatList } from '@/components/ChatList';
 import { ChatDisplay } from '@/components/ChatDisplay';
-import { Chat } from '@/lib/db';
+import { Chat } from '@/lib/supabase/queries';
 import { Header } from '@/components/Header';
 import { createClient } from '@/lib/supabase/client';
 import { User } from '@supabase/supabase-js';

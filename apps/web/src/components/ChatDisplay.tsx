@@ -1,4 +1,4 @@
-import { Chat } from '@/lib/db';
+import { Chat } from '@/lib/supabase/queries';
 
 interface ChatDisplayProps {
   chat: Chat | null;
