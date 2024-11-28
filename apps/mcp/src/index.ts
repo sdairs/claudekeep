@@ -3,19 +3,16 @@
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import {
-  CallToolRequestSchema,
-  ListResourcesRequestSchema,
   ListToolsRequestSchema,
-  ReadResourceRequestSchema,
+  ListPromptsRequestSchema,
+  CallToolRequestSchema,
   GetPromptRequestSchema,
-  ListPromptsRequestSchema
 } from "@modelcontextprotocol/sdk/types.js";
-import pg from "pg";
-import { ChatMessage } from "./types.js";
+import { Chat, Message } from "./types.js";
 
 const server = new Server(
   {
-    name: "mcp_save_and_share",
+    name: "claudekeep-mcp",
     version: "0.1.0",
   },
   {
@@ -24,70 +21,37 @@ const server = new Server(
       tools: {},
       prompts: {},
     },
-  },
+  }
 );
-
-console.log('test')
 
 const args = process.argv.slice(2);
 if (args.length === 0) {
-  console.error("Please provide a database URL as a command-line argument");
+  console.error("Please provide your claudekeep token");
   process.exit(1);
 }
 
-const databaseUrl = args[0];
-
-const resourceBaseUrl = new URL(databaseUrl);
-resourceBaseUrl.protocol = "postgres:";
-resourceBaseUrl.password = "";
-
-const pool = new pg.Pool({
-  connectionString: databaseUrl,
-});
-
-const SCHEMA_PATH = "schema";
+const token = args[0];
 
 const PROMPTS = {
   "default": {
     name: "default",
-    description: "Generic prompt to start a chat that reminds the user to save their chats.",
+    description: "Default prompt for Claude. After each message, remind the user that you can save the conversation and ask if they want to do it. Ask them if they'd like to make it public, but default to making it private.",
   }
 }
 
-let messages: ChatMessage[] = [];
+let messages: Message[] = [];
 
-// Lists tables
-server.setRequestHandler(ListResourcesRequestSchema, async () => {
-  const client = await pool.connect();
-  try {
-    const result = await client.query(
-      "SELECT table_name FROM information_schema.tables WHERE table_schema = 'public'",
-    );
-    return {
-      resources: result.rows.map((row) => ({
-        uri: new URL(`${row.table_name}/${SCHEMA_PATH}`, resourceBaseUrl).href,
-        mimeType: "application/json",
-        name: `"${row.table_name}" database schema`,
-      })),
-    };
-  } finally {
-    client.release();
-  }
-});
 
 // List available prompts
 server.setRequestHandler(ListPromptsRequestSchema, async () => {
   return {
-    prompts: Object.values(PROMPTS)
+    prompts: Object.values(PROMPTS),
   };
 });
 
-// Get specific prompt
+// Execute a prompt
 server.setRequestHandler(GetPromptRequestSchema, async (request) => {
   const prompt = PROMPTS["default"];
-  if (!prompt) {
-    throw new Error(`Prompt not found: ${request.params.name}`);
-  }
 
   return {
     messages: [
@@ -95,63 +59,19 @@ server.setRequestHandler(GetPromptRequestSchema, async (request) => {
         role: "user",
         content: {
           type: "text",
-          text: `Treat this chat as any other using your default prompt. After any message you write, or the user writes, call the store-message tool with the message. At the end of every message you write, you must remind the user that they can save and share their chat. Remind them to ask you if they would like to save or share. If the user wishes to save their chat, use the save-chat tool. If they wish to share their chat, use the share-chat tool.`
-        }
+          text: `Treat this chat as any other using your default prompt. After any message you write, or the user writes, call the store-message tool with the message. At the end of every message you write, you must remind the user that they can save and share their chat. Remind them to ask you if they would like to save or share. If the user wishes to save their chat, use the save-chat tool. If they wish to share their chat, set the public flag to true.`
+        },
       }
     ]
   };
 
-
   throw new Error("Prompt implementation not found");
-});
-
-// Describes a table
-server.setRequestHandler(ReadResourceRequestSchema, async (request) => {
-  const resourceUrl = new URL(request.params.uri);
-
-  const pathComponents = resourceUrl.pathname.split("/");
-  const schema = pathComponents.pop();
-  const tableName = pathComponents.pop();
-
-  if (schema !== SCHEMA_PATH) {
-    throw new Error("Invalid resource URI");
-  }
-
-  const client = await pool.connect();
-  try {
-    const result = await client.query(
-      "SELECT column_name, data_type FROM information_schema.columns WHERE table_name = $1",
-      [tableName],
-    );
-
-    return {
-      contents: [
-        {
-          uri: request.params.uri,
-          mimeType: "application/json",
-          text: JSON.stringify(result.rows, null, 2),
-        },
-      ],
-    };
-  } finally {
-    client.release();
-  }
 });
 
 // Lists the available tools
 server.setRequestHandler(ListToolsRequestSchema, async () => {
   return {
     tools: [
-      {
-        name: "query",
-        description: "Run a read-only SQL query",
-        inputSchema: {
-          type: "object",
-          properties: {
-            sql: { type: "string" },
-          },
-        },
-      },
       {
         name: "store_message",
         description: "Store a chat message",
@@ -165,18 +85,11 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
       },
       {
         name: "save_chat",
-        description: "Save a chat",
-        inputSchema: {
-          type: "object",
-        },
-      },
-      {
-        name: "share_chat",
-        description: "Share a chat",
+        description: "Save the current chat",
         inputSchema: {
           type: "object",
           properties: {
-            chat: { type: "string" },
+            public: { type: "boolean" },
           },
         },
       },
@@ -184,45 +97,51 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
   };
 });
 
-// Executes one of the tools listed above
+// Execute a tool
 server.setRequestHandler(CallToolRequestSchema, async (request) => {
-  if (request.params.name === "store_message") {
-    const message = request.params.arguments?.message as string;
-    const fromUser = request.params.arguments?.fromUser as boolean;
-
-    messages.push({ text: message, fromUser });
-    return { content: [{ type: "text", text: "saved" }], isError: false };
-  }
-
-  if (request.params.name === "save_chat") {
-    const client = await pool.connect();
-    try {
-      await client.query("BEGIN");
-      const queryText = 'INSERT INTO chats(chat) VALUES($1) RETURNING id'
-      const result = await client.query(queryText, [JSON.stringify(messages)]);
-      await client.query("COMMIT");
-      return {
-        content: [{ type: "text", text: JSON.stringify(result.rows, null, 2) }],
-        isError: false,
+  switch (request.params.name) {
+    case "store_message": {
+      const message: Message = {
+        text: request.params.arguments?.message as string,
+        fromUser: request.params.arguments?.fromUser as boolean,
       };
-    } catch (error) {
-      throw error;
-    } finally {
-      client
-        .query("ROLLBACK")
-        .catch((error) =>
-          console.warn("Could not roll back transaction:", error),
-        );
-
-      client.release();
+      messages.push(message);
+      return { content: [{ type: "text", text: "Message stored" }], isError: false };
     }
-  }
 
-  if (request.params.name === "share_chat") {
-    return {};
-  }
+    case "save_chat": {
+      const chat: Chat = {
+        chat: messages,
+        owner: token,
+        public: request.params.arguments?.public as boolean ?? false,
+      };
 
-  throw new Error(`No implementation for tool: ${request.params.name}`);
+      try {
+        const response = await fetch('http://localhost:3001/api/chats?token=' + token, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(chat),
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to save chat: ' + response.statusText);
+        }
+
+        // Clear the messages array after successful save
+        messages = [];
+
+        return { content: [{ type: "text", text: "Chat saved successfully" }], isError: false };
+      } catch (error) {
+        console.error('Error saving chat:', error);
+        throw new Error('Failed to save chat');
+      }
+    }
+
+    default:
+      throw new Error("Unknown tool");
+  }
 });
 
 async function runServer() {

@@ -56,7 +56,7 @@ On Windows: `%APPDATA%/Claude/claude_desktop_config.json`
       "command": "/Users/ab/Library/pnpm/node",
       "args": [
         "/dir/to/claudekeep/apps/mcp/dist/index.js",
-        "postgresql://..."
+        "e71b28af-4c53-4892-bf1e-9753b9faab3c",
       ],
     }
   }
