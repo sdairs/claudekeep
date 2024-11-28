@@ -24,6 +24,8 @@ const server = new Server(
   }
 );
 
+const claudekeepUrl = "http://claudekeep.vercel.app";
+
 const args = process.argv.slice(2);
 if (args.length === 0) {
   console.error("Please provide your claudekeep token");
@@ -117,7 +119,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       };
 
       try {
-        const response = await fetch('http://localhost:3001/api/chats?token=' + token, {
+        const response = await fetch(claudekeepUrl + '/api/chats?token=' + token, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
