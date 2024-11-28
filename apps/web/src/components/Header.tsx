@@ -4,10 +4,11 @@ import { createClient } from '@/lib/supabase/client';
 import { getUser } from '@/lib/supabase/queries';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { User } from '@supabase/supabase-js';
 
 export function Header() {
   const supabase = createClient();
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
     const fetchUser = async () => {

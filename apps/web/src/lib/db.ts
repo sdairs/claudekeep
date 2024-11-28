@@ -42,31 +42,6 @@ export async function getChats(userId?: string): Promise<Chat[]> {
   }
 }
 
-export async function getChatById(id: string, userId?: string): Promise<Chat | null> {
-  try {
-    const { data, error } = await supabase
-      .from('chats')
-      .select('*')
-      .eq('id', id)
-      .single();
-
-    if (error) {
-      console.error('Error fetching chat:', error);
-      return null;
-    }
-
-    // Check if user has access to this chat
-    if (data) {
-      return data;
-    }
-
-    return null;
-  } catch (error) {
-    console.error('Error in getChatById:', error);
-    return null;
-  }
-}
-
 export async function createChat(chat: Omit<Chat, 'id' | 'created_at'>): Promise<Chat | null> {
   try {
     const { data, error } = await supabase

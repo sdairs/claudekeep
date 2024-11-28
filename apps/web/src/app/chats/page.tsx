@@ -6,36 +6,22 @@ import { ChatDisplay } from '@/components/ChatDisplay';
 import { Chat } from '@/lib/db';
 import { Header } from '@/components/Header';
 import { createClient } from '@/lib/supabase/client';
-import { useRouter } from 'next/navigation';
+import { User } from '@supabase/supabase-js';
+import { getUser } from '@/lib/supabase/queries';
 
 export default function ChatsPage() {
-  // const router = useRouter();
   const supabase = createClient();
-  const [session, setSession] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [chats, setChats] = useState<Chat[]>([]);
   const [selectedChat, setSelectedChat] = useState<Chat | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Check current session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      if (!session) {
-        // Removed redirect logic here
-      }
-    });
-
-    // Listen for auth changes
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-      if (!session) {
-        // Removed redirect logic here
-      }
-    });
-
-    return () => subscription.unsubscribe();
+    async function loadUser() {
+      const user = await getUser(supabase);
+      setUser(user);
+    }
+    loadUser();
   }, [supabase]);
 
   useEffect(() => {
@@ -45,11 +31,11 @@ export default function ChatsPage() {
         .select('*')
         .order('created_at', { ascending: false });
 
-      if (session) {
+      if (user) {
         // For logged-in users, show their private chats
         console.log('Fetching private chats');
-        console.log(session.user.id);
-        query = query.eq('owner', session.user.id);
+        console.log(user.id);
+        query = query.eq('owner', user.id);
       } else {
         // For non-logged-in users, only show public chats
         console.log('Fetching public chats');
@@ -69,11 +55,7 @@ export default function ChatsPage() {
     }
 
     loadChats();
-  }, [session, supabase]);
-
-  if (!session) {
-    // Removed null return here
-  }
+  }, [user, supabase]);
 
   if (loading) {
     return (
@@ -93,7 +75,7 @@ export default function ChatsPage() {
         <div className="w-64 border-r border-gray-200 bg-white">
           <div className="p-4 border-b border-gray-200">
             <h2 className="text-lg font-semibold text-gray-900">
-              {session ? 'Your Chats' : 'Public Chats'}
+              {user ? 'Your Chats' : 'Public Chats'}
             </h2>
           </div>
           <ChatList
