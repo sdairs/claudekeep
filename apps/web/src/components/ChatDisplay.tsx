@@ -24,7 +24,7 @@ export function ChatDisplay({ chat }: ChatDisplayProps) {
             <div
               className={`max-w-[80%] rounded-lg p-4 ${
                 message.fromUser
-                  ? 'bg-blue-500 text-white'
+                  ? 'bg-indigo-600 text-white'
                   : 'bg-gray-100 text-gray-900'
               }`}
             >

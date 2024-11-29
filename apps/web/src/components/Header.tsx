@@ -97,9 +97,9 @@ export function Header() {
   };
 
   return (
-    <header className="bg-white shadow">
+    <header>
       <nav className="container mx-auto px-4 py-3 flex items-center justify-between">
-        <Link href="/" className="text-xl font-bold text-gray-800">
+        <Link href="/" className="text-2xl font-bold text-purple-400">
           ClaudeKeep
         </Link>
         <div className="flex items-center gap-4">

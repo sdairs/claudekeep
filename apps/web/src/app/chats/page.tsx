@@ -54,7 +54,7 @@ export default function ChatsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen">
         <Header />
         <div className="flex items-center justify-center h-[calc(100vh-4rem)]">
           <div className="text-xl text-gray-500">Loading chats...</div>
@@ -64,12 +64,12 @@ export default function ChatsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen">
       <Header />
-      <div className="flex h-[calc(100vh-4rem)] pt-16">
-        <div className="w-64 border-r border-gray-200 bg-white">
-          <div className="p-4 border-b border-gray-200">
-            <h2 className="text-lg font-semibold text-gray-900">
+      <div className="flex h-[calc(100vh-4rem)]">
+        <div className="w-64 border-gray-600">
+          <div className="p-4 border-gray-600">
+            <h2 className="text-lg font-semibold text-gray-300">
               {user ? 'Your Chats' : 'Public Chats'}
             </h2>
           </div>
@@ -79,7 +79,7 @@ export default function ChatsPage() {
             onSelectChat={setSelectedChat}
           />
         </div>
-        <div className="flex-1 bg-white">
+        <div className="flex-1 mt-12">
           <ChatDisplay chat={selectedChat} />
         </div>
       </div>
