@@ -6,6 +6,7 @@ import { refreshUserToken } from '@/lib/jwt/client';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { User } from '@supabase/supabase-js';
+import { getURL } from '@/lib/supabase/auth';
 
 export function Header() {
   const supabase = createClient();
@@ -48,7 +49,7 @@ export function Header() {
     await supabase.auth.signInWithOAuth({
       provider: 'github',
       options: {
-        redirectTo: `${window.location.origin}/chats`
+        redirectTo: `${getURL()}chats`
       }
     });
   };
