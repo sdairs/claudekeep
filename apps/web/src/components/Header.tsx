@@ -8,6 +8,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { User } from '@supabase/supabase-js';
 import { getURL } from '@/lib/supabase/auth';
+import { Loader } from 'lucide-react';
+
 
 export function Header() {
   const supabase = createClient();
@@ -111,7 +113,7 @@ export function Header() {
                   value={token || ''}
                   readOnly
                   disabled={isLoadingToken}
-                  className={`w-64 px-3 py-1 border rounded ${isLoadingToken ? 'bg-gray-100' : 'bg-gray-50'}`}
+                  className={`w-64 px-3 py-1 border rounded text-black bg-gray-300`}
                 />
                 <button
                   onClick={handleCopyToken}
@@ -119,10 +121,7 @@ export function Header() {
                   className={`absolute right-2 top-1/2 -translate-y-1/2 ${isLoadingToken ? 'text-gray-400' : 'text-gray-500 hover:text-gray-700'}`}
                 >
                   {isLoadingToken ? (
-                    <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
+                    <Loader className="animate-spin" />
                   ) : copying ? (
                     <span className="text-green-500">Copied!</span>
                   ) : (
@@ -143,12 +142,12 @@ export function Header() {
           )}
           {user ? (
             <div className="flex items-center gap-4">
-              <Link href="/chats" className="text-gray-600 hover:text-gray-900">
+              <Link href="/chats" className="text-white hover:text-gray-900">
                 My Chats
               </Link>
               <button
                 onClick={handleLogout}
-                className="text-gray-600 hover:text-gray-900"
+                className="text-white hover:text-gray-900"
               >
                 Logout
               </button>

@@ -54,7 +54,7 @@ export default function Home() {
                 <Link
                   key={chat.id}
                   href={`/chats?id=${chat.id}`}
-                  className="block bg-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200"
+                  className="block bg-gray-300 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200"
                 >
                   <div className="p-6">
                     <div className="text-sm text-gray-500 mb-2">
