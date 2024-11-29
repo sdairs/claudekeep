@@ -37,19 +37,17 @@ npm run watch
 
 ## Installation
 
-### From npm
-
-First install the package:
-
-```bash
-npm install -g claudekeep-mcp
-```
-
-To use with Claude Desktop, add the server config:
+To use with Claude Desktop, you need to add the server config to the following file:
 
 On MacOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
 
 On Windows: `%APPDATA%/Claude/claude_desktop_config.json`
+
+You can either use the published package from npm or build the server from source.
+
+### From npm
+
+Use this config and then restart Claude Desktop:
 
 ```json
 {
@@ -67,8 +65,6 @@ On Windows: `%APPDATA%/Claude/claude_desktop_config.json`
   }
 }
 ```
-
-Restart Claude Desktop.
 
 ### From source
 
@@ -89,13 +85,7 @@ Then build the server:
 pnpm build
 ```
 
-The server will be installed to `./claudekeep/apps/mcp/dist/index.js`. You'll need the full path to this file for the Claude Desktop config.
-
-To use with Claude Desktop, add the server config:
-
-On MacOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
-
-On Windows: `%APPDATA%/Claude/claude_desktop_config.json`
+Use this config and then restart Claude Desktop:
 
 ```json
 {
