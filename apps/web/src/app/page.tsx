@@ -20,7 +20,7 @@ export default function Home() {
       setLoading(false);
     }
     loadPublicChats();
-  });
+  }, [supabase]); // Only run when supabase client changes
 
   return (
     <div className="min-h-screen bg-gray-50">
