@@ -9,4 +9,5 @@ export interface Chat {
     created_at?: Date;
     owner: string;
     public: boolean;
+    chat_session_id?: string;
 }

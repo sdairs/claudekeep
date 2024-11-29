@@ -32,6 +32,7 @@ export async function POST(request: NextRequest) {
           chat: body.chat,
           owner: userId,
           public: body.public || false,
+          chat_session_id: body.chat_session_id,
         },
       ]);
 

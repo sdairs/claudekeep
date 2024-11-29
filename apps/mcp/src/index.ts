@@ -158,6 +158,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         chat: messages,
         owner: token,
         public: request.params.arguments?.public as boolean ?? false,
+        chat_session_id: loggingSession
       };
 
       try {
