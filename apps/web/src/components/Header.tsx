@@ -8,8 +8,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { User } from '@supabase/supabase-js';
 import { getURL } from '@/lib/supabase/auth';
-import { Loader } from 'lucide-react';
-
+import { Loader, RotateCcw, Copy } from 'lucide-react';
 
 export function Header() {
   const supabase = createClient();
@@ -107,37 +106,34 @@ export function Header() {
         <div className="flex items-center gap-4">
           {user && (
             <div className="flex items-center gap-2">
-              <div className="relative">
-                <input
-                  type="text"
-                  value={token || ''}
-                  readOnly
-                  disabled={isLoadingToken}
-                  className={`w-64 px-3 py-1 border rounded text-black bg-gray-300`}
-                />
-                <button
-                  onClick={handleCopyToken}
-                  disabled={isLoadingToken || !token}
-                  className={`absolute right-2 top-1/2 -translate-y-1/2 ${isLoadingToken ? 'text-gray-400' : 'text-gray-500 hover:text-gray-700'}`}
-                >
-                  {isLoadingToken ? (
-                    <Loader className="animate-spin" />
-                  ) : copying ? (
-                    <span className="text-green-500">Copied!</span>
-                  ) : (
-                    'Copy'
-                  )}
-                </button>
-              </div>
+              <button
+                onClick={handleCopyToken}
+                disabled={isLoadingToken}
+                className="p-2 text-white hover:text-gray-300"
+              >
+                <Copy className="w-5 h-5" />
+              </button>
+              <input
+                type="text"
+                value={token || ''}
+                readOnly
+                disabled={isLoadingToken}
+                className={`w-64 px-3 py-1 border rounded text-black bg-gray-300`}
+              />
               <button
                 onClick={handleRefreshToken}
                 disabled={isLoadingToken}
-                className={`p-2 ${isLoadingToken ? 'text-gray-400' : 'text-gray-500 hover:text-gray-700'}`}
+                className="p-2 text-white hover:text-gray-300"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clipRule="evenodd" />
-                </svg>
+                {isLoadingToken ? (
+                  <Loader className="animate-spin w-5 h-5" />
+                ) : (
+                  <RotateCcw className="w-5 h-5" />
+                )}
               </button>
+              {copying && (
+                <span className="text-green-500 text-sm">Copied!</span>
+              )}
             </div>
           )}
           {user ? (
