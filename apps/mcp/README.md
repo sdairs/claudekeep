@@ -66,6 +66,33 @@ Use this config and then restart Claude Desktop:
 }
 ```
 
+Claude Desktop can have issues reading PATH when launching on MacOS. Launching it from the terminal seems to help. Here are some useful aliases so you can launch Claude using `claude`:
+
+```bash
+echo 'alias claude="open -a Claude"' >> ~/.zshrc
+echo 'alias qclaude="echo \":wave: Goodbye from Claude\" && osascript -e '"'"'quit app \"Claude\"'"'"'"' >> ~/.zshrc
+```
+
+This config can also be useful if you use pnpm to manage Node:
+
+```json
+{
+  "mcpServers": {
+    "claudekeep-mcp": {
+      "command": "/Users/user/Library/pnpm/pnpm",
+      "args": [
+        "dlx",
+        "claudekeep-mcp"
+      ],
+      "env": {
+        "CLAUDEKEEP_TOKEN": "<YOUR_TOKEN>"
+      }
+    }
+  }
+}
+```
+
+
 ### From source
 
 Clone this repo:
