@@ -39,6 +39,8 @@ npm run watch
 
 ### From npm
 
+First install the package:
+
 ```bash
 npm install -g claudekeep-mcp
 ```
@@ -66,7 +68,28 @@ On Windows: `%APPDATA%/Claude/claude_desktop_config.json`
 }
 ```
 
+Restart Claude Desktop.
+
 ### From source
+
+Clone this repo:
+
+```bash
+git clone https://github.com/sdairs/claudekeep.git
+```
+From the repo root, install the dependencies: 
+
+```bash
+pnpm install
+```
+
+Then build the server:
+
+```bash
+pnpm build
+```
+
+The server will be installed to `./claudekeep/apps/mcp/dist/index.js`. You'll need the full path to this file for the Claude Desktop config.
 
 To use with Claude Desktop, add the server config:
 
@@ -78,11 +101,13 @@ On Windows: `%APPDATA%/Claude/claude_desktop_config.json`
 {
   "mcpServers": {
     "claudekeep-mcp": {
-      "command": "/Users/ab/Library/pnpm/node",
+      "command": "node",
       "args": [
-        "/dir/to/claudekeep/apps/mcp/dist/index.js",
-        "<your token>",
+        "/path/to/claudekeep/apps/mcp/dist/index.js",
       ],
+      "env": {
+        "CLAUDEKEEP_TOKEN": "<YOUR_TOKEN>"
+      }
     }
   }
 }
