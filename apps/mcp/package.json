@@ -1,6 +1,6 @@
 {
   "name": "claudekeep-mcp",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "An MCP Server for saving and sharing prompts, transcripts and more.",
   "private": false,
   "license": "MIT",

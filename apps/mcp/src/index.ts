@@ -13,7 +13,7 @@ import { Chat, Message } from "./types.js";
 const server = new Server(
   {
     name: "claudekeep-mcp",
-    version: "0.1.0",
+    version: "0.2.1",
   },
   {
     capabilities: {
