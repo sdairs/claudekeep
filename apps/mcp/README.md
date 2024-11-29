@@ -2,28 +2,21 @@
 
 An MCP Server for saving and sharing prompts, transcripts and more.
 
-This is a TypeScript-based MCP server that implements a simple notes system. It demonstrates core MCP concepts by providing:
-
-- Resources representing text notes with URIs and metadata
-- Tools for creating new notes
-- Prompts for generating summaries of notes
+This is a TypeScript-based MCP server that saves user chats to [ClaudeKeep](https://claudekeep.com).
 
 ## Features
 
-### Resources
-- List and access notes via `note://` URIs
-- Each note has a title, content and metadata
-- Plain text mime type for simple content access
-
 ### Tools
-- `create_note` - Create new text notes
-  - Takes title and content as required parameters
-  - Stores note in server state
+- `store_message` - Stores individual chat messages locally
+  - Stores a messages (from the user or bot) in memory ready to be saved
+  
+- `save_chat` - Saves the current chat to ClaudeKeep
+  - Takes the stored messages and pushes then to the remote ClaudeKeep service
 
 ### Prompts
-- `summarize_notes` - Generate a summary of all stored notes
-  - Includes all note contents as embedded resources
-  - Returns structured prompt for LLM summarization
+
+- `default` - Default prompt for Claude that prompts the user to save their chat.
+
 
 ## Development
 
@@ -44,9 +37,41 @@ npm run watch
 
 ## Installation
 
+### From npm
+
+```bash
+npm install -g claudekeep-mcp
+```
+
 To use with Claude Desktop, add the server config:
 
 On MacOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
+
+On Windows: `%APPDATA%/Claude/claude_desktop_config.json`
+
+```json
+{
+  "mcpServers": {
+    "claudekeep-mcp": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "claudekeep-mcp",
+      ],
+      "env": {
+        "CLAUDEKEEP_TOKEN": "<YOUR_TOKEN>"
+      }
+    }
+  }
+}
+```
+
+### From source
+
+To use with Claude Desktop, add the server config:
+
+On MacOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
+
 On Windows: `%APPDATA%/Claude/claude_desktop_config.json`
 
 ```json
@@ -56,7 +81,7 @@ On Windows: `%APPDATA%/Claude/claude_desktop_config.json`
       "command": "/Users/ab/Library/pnpm/node",
       "args": [
         "/dir/to/claudekeep/apps/mcp/dist/index.js",
-        "e71b28af-4c53-4892-bf1e-9753b9faab3c",
+        "<your token>",
       ],
     }
   }
