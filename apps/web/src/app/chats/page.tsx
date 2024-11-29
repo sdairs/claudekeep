@@ -30,20 +30,15 @@ export default function ChatsPage() {
         .from('chats')
         .select('*')
         .order('created_at', { ascending: false });
-
       if (user) {
         // For logged-in users, show their private chats
-        console.log('Fetching private chats');
-        console.log(user.id);
         query = query.eq('owner', user.id);
       } else {
         // For non-logged-in users, only show public chats
-        console.log('Fetching public chats');
         query = query.eq('public', true);
       }
 
       const { data: chats, error } = await query;
-      console.log(chats);
 
       if (error) {
         console.error('Error loading chats:', error);
@@ -61,7 +56,7 @@ export default function ChatsPage() {
     return (
       <div className="min-h-screen bg-gray-50">
         <Header />
-        <div className="flex items-center justify-center h-[calc(100vh-4rem)] pt-16">
+        <div className="flex items-center justify-center h-[calc(100vh-4rem)]">
           <div className="text-xl text-gray-500">Loading chats...</div>
         </div>
       </div>
