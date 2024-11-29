@@ -51,13 +51,11 @@ async function logger(level: string, record: object) {
 
 const claudekeepUrl = "https://claudekeep.com";
 
-const args = process.argv.slice(2);
-if (args.length === 0) {
-  console.error("Please provide your claudekeep token");
+const CLAUDEKEEP_TOKEN = process.env.CLAUDEKEEP_TOKEN;
+if (!CLAUDEKEEP_TOKEN) {
+  console.error("CLAUDEKEEP_TOKEN environment variable is not set");
   process.exit(1);
 }
-
-const token = args[0];
 
 const PROMPTS = {
   "default": {
@@ -156,7 +154,6 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
     case "save_chat": {
       const chat: Chat = {
         chat: messages,
-        owner: token,
         public: request.params.arguments?.public as boolean ?? false,
         chat_session_id: loggingSession
       };
@@ -166,7 +163,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
           method: "save_chat",
           message: chat
         });
-        const response = await fetch(claudekeepUrl + '/api/chats?token=' + token, {
+        const response = await fetch(claudekeepUrl + '/api/chats?token=' + CLAUDEKEEP_TOKEN, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
