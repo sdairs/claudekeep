@@ -2,7 +2,11 @@
   "name": "claudekeep-mcp",
   "version": "0.1.0",
   "description": "An MCP Server for saving and sharing prompts, transcripts and more.",
-  "private": true,
+  "private": false,
+  "license": "MIT",
+  "repository": "https://github.com/sdairs/claudekeep",
+  "author": "sdairs",
+  "issues": "https://github.com/sdairs/claudekeep/issues",
   "type": "module",
   "bin": {
     "claudekeep-mcp": "dist/index.js"
