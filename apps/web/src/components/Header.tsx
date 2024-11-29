@@ -69,7 +69,7 @@ export function Header() {
     await supabase.auth.signInWithOAuth({
       provider: 'github',
       options: {
-        redirectTo: `${getURL()}chats`
+        redirectTo: `${getURL()}auth/callback`
       }
     });
   };
