@@ -5,15 +5,33 @@ import { getUser } from '@/lib/supabase/queries';
 import { refreshUserToken } from '@/lib/jwt/client';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { User } from '@supabase/supabase-js';
 import { getURL } from '@/lib/supabase/auth';
 
 export function Header() {
   const supabase = createClient();
+  const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [copying, setCopying] = useState(false);
   const [isLoadingToken, setIsLoadingToken] = useState(false);
+
+  useEffect(() => {
+    // Listen for auth state changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
+      if (event === 'SIGNED_OUT') {
+        setUser(null);
+        setToken(null);
+        router.push('/');
+      }
+    });
+
+    // Cleanup subscription
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [supabase, router]);
 
   useEffect(() => {
     const fetchUser = async () => {
