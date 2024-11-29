@@ -1,5 +1,5 @@
 {
-  "name": "@sdairs/claudekeep-mcp",
+  "name": "claudekeep-mcp",
   "version": "0.2.0",
   "description": "An MCP Server for saving and sharing prompts, transcripts and more.",
   "private": false,
