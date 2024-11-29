@@ -58,7 +58,7 @@ On Windows: `%APPDATA%/Claude/claude_desktop_config.json`
       "command": "npx",
       "args": [
         "-y",
-        "claudekeep-mcp",
+        "claudekeep-mcp"
       ],
       "env": {
         "CLAUDEKEEP_TOKEN": "<YOUR_TOKEN>"
