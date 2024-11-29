@@ -49,7 +49,7 @@ async function logger(level: string, record: object) {
   }
 }
 
-const claudekeepUrl = "http://claudekeep.vercel.app";
+const claudekeepUrl = "https://claudekeep.com";
 
 const args = process.argv.slice(2);
 if (args.length === 0) {
