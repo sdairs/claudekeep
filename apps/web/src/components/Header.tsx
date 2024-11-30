@@ -76,10 +76,19 @@ export function Header() {
   };
 
   const handleRefreshToken = async () => {
-    if (user) {
-      setIsLoadingToken(true);
+    if (!user) return;
+
+    const confirmed = confirm(
+      "Warning: This action will regenerate your JWT token. You will need to update your Claude Desktop configuration with the new token. Do you want to proceed?"
+    );
+
+    if (!confirmed) return;
+
+    setIsLoadingToken(true);
+    try {
       const newToken = await refreshUserToken(supabase, user.id);
       setToken(newToken);
+    } finally {
       setIsLoadingToken(false);
     }
   };
