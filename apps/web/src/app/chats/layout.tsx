@@ -2,7 +2,7 @@ import { createClient } from '@/lib/supabase/server';
 import { getUserChats } from '@/lib/supabase/queries';
 import { ChatListContainer } from '@/components/chat-list-container';
 
-export default async function ChatLayout({
+export default async function ChatsLayout({
     children,
 }: {
     children: React.ReactNode;

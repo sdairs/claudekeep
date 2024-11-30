@@ -23,11 +23,10 @@ export function ChatItem({
   const preview = firstMessage.length > 120 ? firstMessage.substring(0, 120) + '...' : firstMessage;
 
   return (
-    <Link href={featured ? `/chats/shared/${chat.id}` : `/chats/${chat.id}`} className="block hover:no-underline">
+    <Link href={featured ? `/chat/${chat.id}` : `/chats/${chat.id}`} className="block hover:no-underline">
       <Card className={`h-full transition-colors hover:bg-accent/50 ${featured ? 'flex flex-col' : ''}`}>
         <CardHeader>
           <div>
-            {/* <CardTitle className="line-clamp-1">{chat.title}</CardTitle> */}
             {showBadge && (
               <PrivacyBadge isPublic={chat.public} />
             )}

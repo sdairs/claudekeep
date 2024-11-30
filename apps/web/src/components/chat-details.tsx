@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { format } from 'date-fns';
-import { Trash2, Share2, Ban } from 'lucide-react';
+import { Trash2, Share2, Lock, LockOpen, Check } from 'lucide-react';
 import { Chat } from '@/lib/supabase/queries';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -27,6 +27,7 @@ export function ChatDetails({ chat }: ChatDetailsProps) {
   const [isDeleting, setIsDeleting] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [isCopying, setIsCopying] = useState(false);
 
   const handleDelete = async () => {
     setIsDeleting(true);
@@ -51,6 +52,18 @@ export function ChatDetails({ chat }: ChatDetailsProps) {
     }
   };
 
+  const handleCopyLink = async () => {
+    try {
+      const baseUrl = window.location.origin;
+      const shareUrl = `${baseUrl}/chat/${chat.id}`;
+      await navigator.clipboard.writeText(shareUrl);
+      setIsCopying(true);
+      setTimeout(() => setIsCopying(false), 2000);
+    } catch (error) {
+      console.error('Failed to copy URL:', error);
+    }
+  };
+
   return (
     <Card className="mb-4">
       <CardContent className="pt-6">
@@ -68,20 +81,6 @@ export function ChatDetails({ chat }: ChatDetailsProps) {
 
           <div className="flex items-center gap-2">
             <Button
-              variant="outline"
-              size="sm"
-              onClick={handleVisibilityToggle}
-              disabled={isUpdating}
-            >
-              {chat.public ? (
-                <Ban className="w-4 h-4 mr-2" />
-              ) : (
-                <Share2 className="w-4 h-4 mr-2" />
-              )}
-              {chat.public ? "Make Private" : "Share"}
-            </Button>
-
-            <Button
               variant="destructive"
               size="sm"
               onClick={() => setShowDeleteDialog(true)}
@@ -89,6 +88,34 @@ export function ChatDetails({ chat }: ChatDetailsProps) {
             >
               <Trash2 className="w-4 h-4 mr-2" />
               Delete
+            </Button>
+
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleVisibilityToggle}
+              disabled={isUpdating}
+            >
+              {chat.public ? (
+                <Lock className="w-4 h-4 mr-2" />
+              ) : (
+                <LockOpen className="w-4 h-4 mr-2" />
+              )}
+              {chat.public ? "Make private" : "Make public"}
+            </Button>
+
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleCopyLink}
+              disabled={!chat.public}
+            >
+              {isCopying ? (
+                <Check className="w-4 h-4 mr-2" />
+              ) : (
+                <Share2 className="w-4 h-4 mr-2" />
+              )}
+              {isCopying ? "Copied!" : "Copy link"}
             </Button>
           </div>
         </div>

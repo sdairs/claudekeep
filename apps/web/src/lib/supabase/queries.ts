@@ -68,7 +68,6 @@ export async function getChat(supabase: SupabaseClient, id: string): Promise<Cha
             .single();
 
         if (error) {
-            console.error('Error fetching chat:', error);
             return null;
         }
 

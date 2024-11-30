@@ -9,7 +9,7 @@ interface PageProps {
   }>;
 }
 
-export default async function ChatPage({ params }: PageProps) {
+export default async function ChatsPage({ params }: PageProps) {
   const supabase = await createClient();
   const { id } = await params;
   const chat = await getChat(supabase, id);
