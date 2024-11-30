@@ -8,7 +8,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { User } from '@supabase/supabase-js';
 import { getURL } from '@/lib/supabase/auth';
-import { Loader, RotateCcw, Copy, Check } from 'lucide-react';
+import { Copy, Check } from 'lucide-react';
 import { ModeToggle } from './theme-toggle';
 import { RefreshTokenPopover } from './refresh-token-popover';
 

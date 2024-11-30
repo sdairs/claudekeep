@@ -38,7 +38,7 @@ export async function getUserChats(supabase: SupabaseClient, limit?: number): Pr
     }
     const userId = user?.id;
     try {
-        let query = supabase
+        const query = supabase
             .from('chats')
             .select('*')
             .order('created_at', { ascending: false })

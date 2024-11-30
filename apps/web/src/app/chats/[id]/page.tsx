@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server';
 import { getChat } from '@/lib/supabase/queries';
 import { MessageItem } from '@/components/message-item';
 import { ChatDetails } from '@/components/chat-details';
+import { notFound } from 'next/navigation';
 
 interface PageProps {
   params: Promise<{
@@ -15,11 +16,7 @@ export default async function ChatsPage({ params }: PageProps) {
   const chat = await getChat(supabase, id);
 
   if (!chat) {
-    return (
-      <div className="p-8">
-        Chat not found
-      </div>
-    );
+    notFound();
   }
 
   return (

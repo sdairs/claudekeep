@@ -1,9 +1,8 @@
 'use client';
 
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
+import { Card, CardHeader, CardDescription, CardContent } from "@/components/ui/card";
 import { format } from 'date-fns';
 import Link from 'next/link';
-import { cn } from "@/lib/utils";
 import { Chat } from '@/lib/supabase/queries';
 import { PrivacyBadge } from '@/components/privacy-badge';
 
