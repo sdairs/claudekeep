@@ -1,81 +1,86 @@
-# Turborepo starter
+# ClaudeKeep
 
-This is an official starter Turborepo.
+ClaudeKeep is an experiment with Model Context Protocol (MCP) to save and share your AI conversations from Claude Desktop.
 
-## Using this example
+It includes:
+- an MCP server implementation that allows you to ask Claude to save your chat
+- a web app that allows you to view your private chats and see public chats
 
-Run the following command:
+## WARNING - THIS IS AN EXPERIMENT
 
-```sh
-npx create-turbo@latest
+This is an experiment. Please do not assume that it works perfectly or is secure.
+
+While I have done some testing, I make no guarantees that I've caught every edge case to make sure your chats are not exposed. I suggest you don't test it with sensitive chats.
+
+## How to use it?
+
+### 1. Login and get a token
+
+Go to [https://claudekeep.com](https://claudekeep.com) and hit **Login**. This will attempt to log you in via OAuth with GitHub. At the moment, this is the only OAuth provider supported.
+
+Once logged in, in the top right you'll see a box with a JWT token, copy it.
+
+### 2. Configure Claude Desktop to use the MCP server
+
+To use with Claude Desktop, you need to add the server config to the following file:
+
+On MacOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
+
+On Windows: `%APPDATA%/Claude/claude_desktop_config.json`
+
+Use this config and then restart Claude Desktop (you must completely kill it CMD+Q style and then restart it):
+
+```json
+{
+  "mcpServers": {
+    "claudekeep-mcp": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "claudekeep-mcp"
+      ],
+      "env": {
+        "CLAUDEKEEP_TOKEN": "<YOUR_TOKEN>"
+      }
+    }
+  }
+}
 ```
 
-## What's inside?
+Claude Desktop can be awkward with reading your PATH. See the [MCP readme](./apps/mcp/README.md) for more info if the MCP server doesn't work.
 
-This Turborepo includes the following packages/apps:
+### 3. Select the MCP and chat with Claude
 
-### Apps and Packages
+When you open Claude Desktop, there is a little paperclip icon. Hover over it and there will be a little plug icon. Click that and pick `default` under `claudekeep-mcp`. This will attach the default prompt to Claude. 
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+Now just chat with Claude as normal.
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+Every message you write will trigger the `store_message` tool. This will store the message locally in Claude Desktop.
 
-### Utilities
+When you want to save your chat, just ask Claude. Claude will run the `save_chat` tool. By default chats are always stored as private. If you want to make your chat public straight away, let claude know when you ask it to save.
 
-This Turborepo has some additional tools already setup for you:
+For example (but remember, it's an LLM, it's interpreting your langauge, so you can ask however you want and it will probably hopefully do the right thing):
 
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-
-### Build
-
-To build all apps and packages, run the following command:
-
+To save a a private chat:
 ```
-cd my-turborepo
-pnpm build
+you: save this chat
 ```
 
-### Develop
-
-To develop all apps and packages, run the following command:
-
+To save a public chat:
 ```
-cd my-turborepo
-pnpm dev
+you: save this chat and make it public
 ```
 
-### Remote Caching
+## Need help?
 
-Turborepo can use a technique known as [Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
+Raise an issue or contact me on [BlueSky](https://bsky.app/profile/alasdairb.com).
 
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup), then enter the following commands:
+## Refresh your token
 
-```
-cd my-turborepo
-npx turbo login
-```
+If you accidentally expose your token, login and hit the little refresh icon next to the token. You'll see a warning, click the confirm button and it will generate a new token. The old token will be destroyed and is not recoverable.
 
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
+## Abuse
 
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
+I hope people are good and don't share dodgy chats, but it's the internet, so 🤷‍♂️ it'll probably happen. I'll do my best to catch it, but please nudge me on BlueSky if I miss something.
 
-```
-npx turbo link
-```
-
-## Useful Links
-
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turbo.build/repo/docs/core-concepts/monorepos/running-tasks)
-- [Caching](https://turbo.build/repo/docs/core-concepts/caching)
-- [Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching)
-- [Filtering](https://turbo.build/repo/docs/core-concepts/monorepos/filtering)
-- [Configuration Options](https://turbo.build/repo/docs/reference/configuration)
-- [CLI Usage](https://turbo.build/repo/docs/reference/command-line-reference)
+Note that your chats are stored against your GitHub account, so while public chats are anonymous to other users, they're not anonymous on the server.
