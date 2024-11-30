@@ -35,16 +35,15 @@ export default function Home() {
 
       {/* Featured Chats Grid */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <h2 className="text-3xl font-bold mb-8">Featured Conversations</h2>
+        <h2 className="text-3xl font-bold mb-8">Recent conversations</h2>
 
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-2 auto-rows-min">
           {chats.map((chat) => (
-            <ChatItem
+            <ChatItem 
               key={chat.id}
-              id={chat.id}
-              title={chat.chat[0]?.text.slice(0, 100) || 'Untitled Chat'}
-              lastMessage={`${chat.chat.length} messages`}
-              updatedAt={new Date(chat.created_at)}
+              chat={chat}
+              featured={true}
+              showBadge={false}
             />
           ))}
         </div>

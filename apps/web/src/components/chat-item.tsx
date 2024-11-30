@@ -1,56 +1,49 @@
 'use client';
 
-import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { formatDistanceToNow } from 'date-fns';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
+import { format } from 'date-fns';
 import Link from 'next/link';
 import { cn } from "@/lib/utils";
+import { Chat } from '@/lib/supabase/queries';
+import { PrivacyBadge } from '@/components/privacy-badge';
 
 interface ChatItemProps {
-  id: string;
-  title: string;
-  lastMessage?: string;
-  updatedAt: Date;
-  isPublic?: boolean;
+  chat: Chat;
   showBadge?: boolean;
+  featured?: boolean;
 }
 
-export function ChatItem({ 
-  id, 
-  title, 
-  lastMessage, 
-  updatedAt, 
-  isPublic, 
-  showBadge = false 
+export function ChatItem({
+  chat,
+  showBadge = true,
+  featured = false
 }: ChatItemProps) {
+  // Get first message content for preview
+  const firstMessage = chat.chat[0]?.text || '';
+  const preview = firstMessage.length > 120 ? firstMessage.substring(0, 120) + '...' : firstMessage;
+
   return (
-    <Link href={`/chats/${id}`} className="block hover:no-underline">
-      <Card className="hover:bg-accent transition-colors">
+    <Link href={featured ? `/chats/shared/${chat.id}` : `/chats/${chat.id}`} className="block hover:no-underline">
+      <Card className={`h-full transition-colors hover:bg-accent/50 ${featured ? 'flex flex-col' : ''}`}>
         <CardHeader>
-          <div className="flex items-center justify-between gap-2">
-            <CardTitle className="text-lg">{title}</CardTitle>
-            {showBadge && typeof isPublic !== 'undefined' && (
-              <Badge 
-                variant="outline"
-                className={cn(
-                  isPublic 
-                    ? "border-green-500 text-green-500 hover:bg-green-500/10" 
-                    : "border-yellow-500 text-yellow-500 hover:bg-yellow-500/10"
-                )}
-              >
-                {isPublic ? 'Public' : 'Private'}
-              </Badge>
+          <div>
+            {/* <CardTitle className="line-clamp-1">{chat.title}</CardTitle> */}
+            {showBadge && (
+              <PrivacyBadge isPublic={chat.public} />
             )}
           </div>
-          {lastMessage && (
-            <CardDescription className="line-clamp-2">
-              {lastMessage}
-            </CardDescription>
-          )}
-          <CardDescription className="text-xs mt-2">
-            Last updated: {formatDistanceToNow(updatedAt, { addSuffix: true })}
+          <CardDescription>
+            {chat.created_at && !isNaN(new Date(chat.created_at).getTime())
+              ? format(new Date(chat.created_at), 'PPP')
+              : 'Date not available'
+            }
           </CardDescription>
         </CardHeader>
+        <CardContent className={featured ? 'flex-1 overflow-hidden' : ''}>
+          <p className={`text-sm text-muted-foreground ${featured ? 'line-clamp-6' : 'line-clamp-2'}`}>
+            {preview}
+          </p>
+        </CardContent>
       </Card>
     </Link>
   );

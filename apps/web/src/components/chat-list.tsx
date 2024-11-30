@@ -19,12 +19,9 @@ export function ChatList({ chats, selectedChatId, onSelectChat }: ChatListProps)
           className={`cursor-pointer ${selectedChatId === chat.id ? 'ring-2 ring-primary rounded-xl' : ''}`}
         >
           <ChatItem
-            id={chat.id}
-            title={chat.chat[0]?.text.substring(0, 30) || 'Untitled Chat'}
-            lastMessage={chat.chat[0]?.text}
-            updatedAt={new Date(chat.created_at)}
-            isPublic={chat.public}
+            chat={chat}
             showBadge={true}
+            featured={false}
           />
         </div>
       ))}

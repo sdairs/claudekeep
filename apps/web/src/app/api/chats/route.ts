@@ -15,8 +15,6 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Invalid token' }, { status: 401 });
     }
 
-    console.log('Verified token for user:', userId);
-
     const body = await request.json();
     if (!body.chat || !Array.isArray(body.chat)) {
       return NextResponse.json(

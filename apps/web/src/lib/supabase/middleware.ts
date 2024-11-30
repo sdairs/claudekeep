@@ -30,7 +30,7 @@ export async function updateSession(request: NextRequest) {
 
     // refreshing the auth token
     const { data: { user } } = await supabase.auth.getUser()
-    
+
     if (user) {
         // Check if user already has a token
         const { data: existingToken } = await supabase
@@ -39,11 +39,7 @@ export async function updateSession(request: NextRequest) {
             .eq('user_id', user.id)
             .single()
 
-        console.log('existingToken')
-        console.log(existingToken)
-
         if (!existingToken) {
-            console.log('No token found for user')
             // Generate token if user doesn't have one
             await generateUserToken(user.id)
         }
