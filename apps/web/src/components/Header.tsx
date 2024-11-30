@@ -9,6 +9,7 @@ import { useRouter } from 'next/navigation';
 import { User } from '@supabase/supabase-js';
 import { getURL } from '@/lib/supabase/auth';
 import { Loader, RotateCcw, Copy } from 'lucide-react';
+import { ModeToggle } from './theme-toggle';
 
 export function Header() {
   const supabase = createClient();
@@ -118,7 +119,7 @@ export function Header() {
               <button
                 onClick={handleCopyToken}
                 disabled={isLoadingToken}
-                className="p-2 text-white hover:text-gray-300"
+                className="p-2 text-white"
               >
                 <Copy className="w-5 h-5" />
               </button>
@@ -127,12 +128,12 @@ export function Header() {
                 value={token || ''}
                 readOnly
                 disabled={isLoadingToken}
-                className={`w-64 px-3 py-1 border rounded text-black bg-gray-300`}
+                className={`w-64 px-3 py-1 border rounded`}
               />
               <button
                 onClick={handleRefreshToken}
                 disabled={isLoadingToken}
-                className="p-2 text-white hover:text-gray-300"
+                className="p-2 "
               >
                 {isLoadingToken ? (
                   <Loader className="animate-spin w-5 h-5" />
@@ -160,11 +161,12 @@ export function Header() {
           ) : (
             <button
               onClick={handleLogin}
-              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2"
             >
               Login
             </button>
           )}
+          <ModeToggle />
         </div>
       </nav>
     </header>

@@ -102,3 +102,23 @@ export async function updateChat(supabase: SupabaseClient, id: string, userId: s
         return null;
     }
 }
+
+export async function getChat(supabase: SupabaseClient, id: string): Promise<Chat | null> {
+    try {
+        const { data: chat, error } = await supabase
+            .from('chats')
+            .select('*')
+            .eq('id', id)
+            .single();
+
+        if (error) {
+            console.error('Error fetching chat:', error);
+            return null;
+        }
+
+        return chat;
+    } catch (error) {
+        console.error('Error fetching chat:', error);
+        return null;
+    }
+}

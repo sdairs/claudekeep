@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { ThemeProvider } from "@/components/theme-provider"
+import { Header } from "@/components/header"
 import localFont from "next/font/local";
 import "./globals.css";
 
@@ -24,9 +26,21 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
-      <body>
-        {children}
+    <html lang="en" suppressHydrationWarning>
+      <head />
+      <body className={`${geistSans.variable} ${geistMono.variable}`}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem={false}
+          disableTransitionOnChange
+          storageKey="claudekeep-theme"
+        >
+          <div className="min-h-screen">
+            <Header />
+            {children}
+          </div>
+        </ThemeProvider>
       </body>
     </html>
   );
