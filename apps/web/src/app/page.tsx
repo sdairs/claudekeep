@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 import { Chat, getPublicChats } from '@/lib/supabase/queries';
 import { ChatItem } from '@/components/chat-item';
 import { createClient } from '@/lib/supabase/client';
+import { Card } from '@/components/ui/card';
+import { Construction, SquareArrowOutUpRight } from 'lucide-react';
 
 export default function Home() {
   const [chats, setChats] = useState<Chat[]>([]);
@@ -30,6 +32,37 @@ export default function Home() {
           <p className="mt-3 max-w-md mx-auto text-base sm:text-lg md:mt-5 md:text-xl md:max-w-3xl">
             ClaudeKeep helps you save, organize, and share your conversations with Claude. Browse public chats or sign in to create your own private collection.
           </p>
+          <Card className="mt-5 w-fit mx-auto p-4">
+            <Construction className='inline mr-2 h-6 w-6' color='orange' />
+            <Construction className='inline mr-2 h-6 w-6' color='red' />
+            <Construction className='inline mr-2 h-6 w-6' color='orange' />
+            <Construction className='inline mr-2 h-6 w-6' color='red' />
+            <Construction className='inline mr-2 h-6 w-6' color='orange' />
+            <div className='mb-4'>
+              This is a <a target="_blank"
+                rel="noopener noreferrer"
+                className="text-indigo-600 hover:text-indigo-500 font-medium"
+                href="https://modelcontextprotocol.io/introduction">
+                Model Context Protocol (MCP) </a>
+              experiment. It requires a bit of technical setup.
+            </div>
+            <div>
+              <a
+                href="https://github.com/sdairs/claudekeep"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-indigo-600 hover:text-indigo-500 font-medium"
+              >
+                Read the README
+                <SquareArrowOutUpRight className='inline ml-2 h-4 w-4' />
+              </a>
+            </div>
+            <Construction className='inline mr-2 h-6 w-6' color='orange' />
+            <Construction className='inline mr-2 h-6 w-6' color='red' />
+            <Construction className='inline mr-2 h-6 w-6' color='orange' />
+            <Construction className='inline mr-2 h-6 w-6' color='red' />
+            <Construction className='inline mr-2 h-6 w-6' color='orange' />
+          </Card>
         </div>
       </div>
 
@@ -39,7 +72,7 @@ export default function Home() {
 
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-2 auto-rows-min">
           {chats.map((chat) => (
-            <ChatItem 
+            <ChatItem
               key={chat.id}
               chat={chat}
               featured={true}
@@ -48,6 +81,6 @@ export default function Home() {
           ))}
         </div>
       </div>
-    </main>
+    </main >
   );
 }
