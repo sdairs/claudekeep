@@ -8,8 +8,9 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { User } from '@supabase/supabase-js';
 import { getURL } from '@/lib/supabase/auth';
-import { Loader, RotateCcw, Copy } from 'lucide-react';
+import { Loader, RotateCcw, Copy, Check } from 'lucide-react';
 import { ModeToggle } from './theme-toggle';
+import { RefreshTokenPopover } from './refresh-token-popover';
 
 export function Header() {
   const supabase = createClient();
@@ -78,13 +79,6 @@ export function Header() {
 
   const handleRefreshToken = async () => {
     if (!user) return;
-
-    const confirmed = confirm(
-      "Warning: This action will regenerate your JWT token. You will need to update your Claude Desktop configuration with the new token. Do you want to proceed?"
-    );
-
-    if (!confirmed) return;
-
     setIsLoadingToken(true);
     try {
       const newToken = await refreshUserToken(supabase, user.id);
@@ -119,9 +113,13 @@ export function Header() {
               <button
                 onClick={handleCopyToken}
                 disabled={isLoadingToken}
-                className="p-2 text-white"
+                className="p-2"
               >
-                <Copy className="w-5 h-5" />
+                {copying ? (
+                  <Check className="w-5 h-5 text-green-500" />
+                ) : (
+                  <Copy className="w-5 h-5" />
+                )}
               </button>
               <input
                 type="text"
@@ -130,30 +128,19 @@ export function Header() {
                 disabled={isLoadingToken}
                 className={`w-64 px-3 py-1 border rounded`}
               />
-              <button
-                onClick={handleRefreshToken}
-                disabled={isLoadingToken}
-                className="p-2 "
-              >
-                {isLoadingToken ? (
-                  <Loader className="animate-spin w-5 h-5" />
-                ) : (
-                  <RotateCcw className="w-5 h-5" />
-                )}
-              </button>
-              {copying && (
-                <span className="text-green-500 text-sm">Copied!</span>
-              )}
+              <RefreshTokenPopover
+                isLoading={isLoadingToken}
+                onRefresh={handleRefreshToken}
+              />
             </div>
           )}
           {user ? (
             <div className="flex items-center gap-4">
-              <Link href="/chats" className="text-white hover:text-gray-900">
+              <Link href="/chats">
                 My Chats
               </Link>
               <button
                 onClick={handleLogout}
-                className="text-white hover:text-gray-900"
               >
                 Logout
               </button>
