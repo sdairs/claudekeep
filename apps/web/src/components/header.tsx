@@ -8,9 +8,11 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { User } from '@supabase/supabase-js';
 import { getURL } from '@/lib/supabase/auth';
-import { Copy, Check } from 'lucide-react';
+import { Copy, Check, CircleUser, MessageSquareText } from 'lucide-react';
 import { ModeToggle } from './theme-toggle';
 import { RefreshTokenPopover } from './refresh-token-popover';
+import { Button } from './ui/button';
+
 
 export function Header() {
   const supabase = createClient();
@@ -136,22 +138,28 @@ export function Header() {
           )}
           {user ? (
             <div className="flex items-center gap-4">
-              <Link href="/chats">
-                My Chats
-              </Link>
-              <button
+              <Button asChild variant={"outline"}>
+                <Link href="/chats">
+                  <MessageSquareText className="h-4 w-4" />
+                  My Chats
+                </Link>
+              </Button>
+              <Button
+                variant="outline"
                 onClick={handleLogout}
               >
+                <CircleUser className="h-4 w-4" />
                 Logout
-              </button>
+              </Button>
             </div>
           ) : (
-            <button
+            <Button
+              variant="outline"
               onClick={handleLogin}
-              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2"
             >
+              <CircleUser className="h-4 w-4" />
               Login
-            </button>
+            </Button>
           )}
           <ModeToggle />
         </div>
