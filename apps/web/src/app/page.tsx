@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Chat, getChats } from '@/lib/supabase/queries';
+import { Chat, getPublicChats } from '@/lib/supabase/queries';
 import { ChatItem } from '@/components/chat-item';
 import { createClient } from '@/lib/supabase/client';
 
@@ -11,7 +11,7 @@ export default function Home() {
 
   useEffect(() => {
     async function fetchChats() {
-      const chats = await getChats(supabase);
+      const chats = await getPublicChats(supabase);
       setChats(chats);
     }
     fetchChats();

@@ -21,20 +21,29 @@ export const getUser = cache(async (supabase: SupabaseClient) => {
     return user;
 });
 
-export async function getChats(supabase: SupabaseClient, userId?: string): Promise<Chat[]> {
+export const getPublicChats = cache(async (supabase: SupabaseClient, limit?: number): Promise<Chat[]> => {
+    const { data: chats } = await supabase
+        .from('chats')
+        .select('*')
+        .eq('public', true)
+        .order('created_at', { ascending: false })
+        .limit(limit ?? 15);
+    return chats || [];
+});
+
+export async function getUserChats(supabase: SupabaseClient, limit?: number): Promise<Chat[]> {
+    const user = await getUser(supabase);
+    if (!user) {
+        return [];
+    }
+    const userId = user?.id;
     try {
         let query = supabase
             .from('chats')
             .select('*')
-            .order('created_at', { ascending: false });
-
-        if (userId) {
-            // For logged-in users, only show their owned chats
-            query = query.eq('owner', userId);
-        } else {
-            // For non-logged-in users, only show public chats
-            query = query.eq('public', true);
-        }
+            .order('created_at', { ascending: false })
+            .eq('owner', userId)
+            .limit(limit ?? 15);
 
         const { data, error } = await query;
 
@@ -47,59 +56,6 @@ export async function getChats(supabase: SupabaseClient, userId?: string): Promi
     } catch (error) {
         console.error('Error in getChats:', error);
         return [];
-    }
-}
-
-export async function createChat(supabase: SupabaseClient, chat: Omit<Chat, 'id' | 'created_at'>): Promise<Chat | null> {
-    try {
-        const { data, error } = await supabase
-            .from('chats')
-            .insert([chat])
-            .select()
-            .single();
-
-        if (error) {
-            console.error('Error creating chat:', error);
-            return null;
-        }
-
-        return data;
-    } catch (error) {
-        console.error('Error in createChat:', error);
-        return null;
-    }
-}
-
-export async function updateChat(supabase: SupabaseClient, id: string, userId: string, updates: Partial<Chat>): Promise<Chat | null> {
-    try {
-        // First check if user owns this chat
-        const { data: existingChat } = await supabase
-            .from('chats')
-            .select('owner')
-            .eq('id', id)
-            .single();
-
-        if (!existingChat || existingChat.owner !== userId) {
-            console.error('User does not have permission to update this chat');
-            return null;
-        }
-
-        const { data, error } = await supabase
-            .from('chats')
-            .update(updates)
-            .eq('id', id)
-            .select()
-            .single();
-
-        if (error) {
-            console.error('Error updating chat:', error);
-            return null;
-        }
-
-        return data;
-    } catch (error) {
-        console.error('Error in updateChat:', error);
-        return null;
     }
 }
 
