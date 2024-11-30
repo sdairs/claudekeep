@@ -27,7 +27,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <head />
+      <head>
+        <script
+          src="https://beamanalytics.b-cdn.net/beam.min.js"
+          data-token="5ef93360-2cba-4abc-841b-cfabe3abcff7"
+          async
+        >
+        </script>
+      </head>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <ThemeProvider
           attribute="class"
