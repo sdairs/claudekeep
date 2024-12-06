@@ -2,6 +2,7 @@
 
 import { Message } from '@/lib/supabase/queries';
 import { cn } from '@/lib/utils';
+import ReactMarkdown from 'react-markdown';
 
 interface MessageItemProps {
   message: Message;
@@ -28,7 +29,7 @@ export function MessageItem({ message }: MessageItemProps) {
         )}
       >
         <div className="break-words">
-          {message.text}
+          <ReactMarkdown>{message.text}</ReactMarkdown>
         </div>
         <div
           className={cn(
