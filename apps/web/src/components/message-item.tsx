@@ -29,7 +29,25 @@ export function MessageItem({ message }: MessageItemProps) {
         )}
       >
         <div className="break-words">
-          <ReactMarkdown>{message.text}</ReactMarkdown>
+          <ReactMarkdown
+            components={{
+              code({ node, inline, className, children, ...props }) {
+                return (
+                  <code
+                    className={cn(
+                      "whitespace-pre-wrap break-words",
+                      className
+                    )}
+                    {...props}
+                  >
+                    {children}
+                  </code>
+                );
+              },
+            }}
+          >
+            {message.text}
+          </ReactMarkdown>
         </div>
         <div
           className={cn(
