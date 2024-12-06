@@ -2,6 +2,7 @@
 
 import { Message } from '@/lib/supabase/queries';
 import { cn } from '@/lib/utils';
+import ReactMarkdown from 'react-markdown';
 
 interface MessageItemProps {
   message: Message;
@@ -28,7 +29,25 @@ export function MessageItem({ message }: MessageItemProps) {
         )}
       >
         <div className="break-words">
-          {message.text}
+          <ReactMarkdown
+            components={{
+              code(props) {
+                const { children, className, ...rest } = props
+                return (
+                  <code
+                    className={cn(
+                      "whitespace-pre-wrap break-words",
+                      className
+                    )}
+                    {...rest}>
+                    {children}
+                  </code>
+                )
+              }
+            }}
+          >
+            {message.text}
+          </ReactMarkdown>
         </div>
         <div
           className={cn(
@@ -43,6 +62,6 @@ export function MessageItem({ message }: MessageItemProps) {
           )}
         />
       </div>
-    </div>
+    </div >
   );
 }
