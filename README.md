@@ -1,3 +1,7 @@
+Anthropic sent a trademark take down notice for claudekeep, so this little experiment is over. The code remains available in case its useful for anyone working with MCP.
+
+If it wasn't clear enough, Claudekeep is not affiliated in any way with, nor endorsed by, Anthropic.
+
 # ClaudeKeep
 
 ClaudeKeep is an experiment with Model Context Protocol (MCP) to save and share your AI conversations from Claude Desktop.
